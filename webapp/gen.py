@@ -51,7 +51,7 @@ ac_problems_of_teams = {}
 frozen_teams = set()
 
 # IOI 2020 무시
-data['runs'] = [run for run in data['runs'] if run['team'] != '50000' and run['submissionTime'] <= 205]
+data['runs'] = [run for run in data['runs'] if run['team'] != '50000']
 
 for run in data['runs']:
     if run['team'] not in ac_problems_of_teams:
