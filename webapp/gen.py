@@ -49,7 +49,7 @@ ac_problems_of_teams = {}
 frozen_teams = set()
 
 # IOI 2020 무시
-data['runs'] = [team for run in data['runs'] if run['team'] not in BANNED_TEAMS]
+data['runs'] = [run for run in data['runs'] if run['team'] not in BANNED_TEAMS]
 
 for run in data['runs']:
     if run['team'] not in ac_problems_of_teams:
