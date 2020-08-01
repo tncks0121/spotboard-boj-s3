@@ -8,3 +8,6 @@ js/dist
 
 public/
 dist/
+
+headers.txt
+api/*
