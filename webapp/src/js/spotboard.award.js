@@ -264,7 +264,6 @@ function($, Spotboard) {
         var awardFeedingRuns = [];
 
         // initial_runid 이후의 런들은 다 펜딩으로 피딩함
-        var smallestPendingRunId = null;    // 펜딩처리된 최소의 run id
         runfeeder.strategy._popRun = runfeeder.strategy.popRun;
         runfeeder.strategy.popRun = function() {
             var runIntercepted = runfeeder.strategy._popRun.apply(this);
@@ -275,12 +274,10 @@ function($, Spotboard) {
                 // 아직 까지 않은 run들은 pending 상태로 만들어서 보여주도록 한다.
                 // pending으로 표시한다.
                 runIntercepted.result = '';
-                if(smallestPendingRunId === null || smallestPendingRunId > runIntercepted.getId())
-                    smallestPendingRunId = runIntercepted.getId();
             }
             return runIntercepted;
         };
-        runfeeder.feed(1000000);    // 끝까지 다 feed
+        runfeeder.feed(50000000);    // 끝까지 다 feed
 
         $("#wrapper").addClass('award-mode');
 

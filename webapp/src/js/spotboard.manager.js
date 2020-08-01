@@ -345,6 +345,8 @@ function(Spotboard, $)  {
     };
 
     Spotboard.Manager.initWebsocketEventListener = function() {
+        return;
+        
         if(typeof WebSocket === 'undefined') return;
 
         // websocket을 이용하여 feedServer의 이벤트 발생 여부를 감지함
@@ -428,21 +430,9 @@ function(Spotboard, $)  {
 
         // 최초 개수만큼 피딩
         var fed = 0;
-        var initial_runid = config['initial_runid'];
-        var initial_time = config['initial_time'];
-
-        var crit = function() { return true; } // feed all
-        if(initial_runid !== undefined) {
-            // maximum run Id
-            crit = function(run) { return run.getId() <= initial_runid; };
-        }
-        else if(initial_time !== undefined) {
-            // contest time (in minutes)
-            initial_time = parseInt(initial_time) || 0;
-            crit = function(run) { return run.getTime() <= initial_time };
-
-            // override timer (see 'change' bind function)
-            Spotboard.Manager.displayedContestTime = initial_time * 60;
+        var crit = function(run) { return true; }
+        if(Spotboard.config['award_mode'] == true) {
+            crit = function(run) { return !run.getFrozen(); }
         }
 
         Spotboard.contest.beginRunTransaction();

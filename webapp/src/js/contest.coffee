@@ -334,7 +334,7 @@ class ProblemSummary
 class Run
     # context : contest
     # if context == null, this Run is not yet reflected
-    constructor : (@contest, @id, @problem, @team, @time, @result) ->
+    constructor : (@contest, @id, @problem, @team, @time, @result, @frozen) ->
         assert @contest == @problem.getContest() if @contest?
         assert @contest == @team.getContest() if @contest?
 
@@ -349,6 +349,7 @@ class Run
     getTime : -> @time
     getStatus : -> @status
     getResult : -> @result
+    getFrozen : -> @frozen
 
     isJudgedYes : ->
         @result.substr(0, 3) is "Yes"
@@ -557,7 +558,7 @@ class RunFeeder
 
             run = new Run(@contest, rid, \
                 @contest.getProblem(pid), @contest.getTeam(tid), \
-                parseInt(r.submissionTime), r.result)
+                parseInt(r.submissionTime), r.result, r.frozen)
             continue if run == null
             continue if filter? and not filter(run)   # skip filtered runs
             runs.push(run)
