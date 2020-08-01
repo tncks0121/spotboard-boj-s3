@@ -497,6 +497,7 @@ div.team {
     font-size: 0.9em;
     white-space: nowrap;
     overflow: hidden;
+	max-width: 1024px;
 }
 
 .team-name {
