@@ -2,12 +2,12 @@
  * Contest Configuration
  */
 
-feed_server_path = './sample/';
+feed_server_path = './api/';
 
 config =
 {
     // environment: 'production' or 'develop'
-    environment : 'develop',
+    environment : 'production',
 
     /**
      * The following paths should be accessible:
