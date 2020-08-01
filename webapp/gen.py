@@ -7,25 +7,21 @@ import datetime
 boto3_session = boto3.session.Session(profile_name='spotboard-s3-user')
 s3_client = boto3_session.client('s3')
 
-current_time = datetime.datetime.now()
-if current_time < datetime.datetime(2020, 8, 1, 2, 0, 0):
-    print('Not yet')
-    exit(0)
-
 BUCKET_NAME = 'scoreboard-2020.ucpc.me'
 
-CONTEST_ID = 521
+CONTEST_ID = 524
 OPTION = sys.argv[1]
 assert OPTION in ['public', 'contest']
 
 THRES_PROBLEM = 9
 THRES_TIME = 180
+BANNED_TEAMS = ['50000']
 
 # Chrome에서 https://www.acmicpc.net/contest/spotboard/all/524/runs.json 를 호출할 때
 # 보내는 헤더를 긁어서 붙임.
 # 보안을 위해 일단 공유할 때는 생략합니다.
 with open("headers.txt") as headers_file:
-    headers = [row.split(': ', 2) for row in headers_file.read().split('\n')]
+    headers = [row.split(': ', 2) for row in headers_file.read().strip().split('\n')]
 
 def upload_file(to, content):
     with open(f"{to}", "w") as f:
@@ -39,7 +35,9 @@ def upload_file(to, content):
 if OPTION == 'contest':
     req = requests.get(f"https://www.acmicpc.net/contest/spotboard/all/{CONTEST_ID}/contest.json",
         headers={key: value for key, value in headers})
-    upload_file('api/contest.json', req.text)
+    data = req.json()
+    data['teams'] = [team for team in data['teams'] if team['id'] not in BANNED_TEAMS]
+    upload_file('api/contest.json', ujson.dumps(data))
     exit(0)
 
 req = requests.get(f"https://www.acmicpc.net/contest/spotboard/all/{CONTEST_ID}/runs.json",
@@ -51,7 +49,7 @@ ac_problems_of_teams = {}
 frozen_teams = set()
 
 # IOI 2020 무시
-data['runs'] = [run for run in data['runs'] if run['team'] != '50000']
+data['teams'] = [team for team in data['teams'] if team['id'] not in BANNED_TEAMS]
 
 for run in data['runs']:
     if run['team'] not in ac_problems_of_teams:
